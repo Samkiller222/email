@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CVU Revision Email Writer</title>
+<style>
+  :root {
+    --bg: #f4f5f7;
+    --panel: #ffffff;
+    --border: #d9dce1;
+    --text: #1f2430;
+    --muted: #6b7280;
+    --accent: #1a56db;
+    --accent-hover: #164bc4;
+    --danger: #dc2626;
+    --readout-bg: #fafbfc;
+  }
+  [data-theme="dark"] {
+    --bg: #15171c;
+    --panel: #1e2128;
+    --border: #333844;
+    --text: #e6e8ec;
+    --muted: #9096a3;
+    --accent: #4d82f3;
+    --accent-hover: #3d6fe0;
+    --danger: #f87171;
+    --readout-bg: #23262e;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 24px;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .wrap {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 800px) {
+    .wrap { grid-template-columns: 1fr; }
+  }
+  h1 {
+    font-size: 20px;
+    margin: 0 0 4px;
+    grid-column: 1 / -1;
+  }
+  .sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin: 0 0 8px;
+    grid-column: 1 / -1;
+  }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px;
+  }
+  label {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  input[type="text"] {
+    width: 100%;
+    padding: 9px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 14px;
+    margin-bottom: 14px;
+    font-family: inherit;
+    background: var(--panel);
+    color: var(--text);
+  }
+  input[type="text"]:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  .bullets-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .bullets-title span {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .bullet-row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 8px;
+    align-items: flex-start;
+  }
+  .bullet-row input {
+    margin-bottom: 0;
+  }
+  .icon-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    width: 34px;
+    min-width: 34px;
+    cursor: pointer;
+    font-size: 15px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .icon-btn:hover { background: var(--readout-bg); color: var(--danger); }
+  .icon-btn { background: var(--panel); color: var(--muted); }
+  .add-btn {
+    width: 100%;
+    padding: 8px;
+    border: 1px dashed var(--border);
+    border-radius: 6px;
+    background: none;
+    color: var(--accent);
+    cursor: pointer;
+    font-size: 13.5px;
+    font-weight: 500;
+    margin-top: 2px;
+  }
+  .bullet-row textarea {
+    width: 100%;
+    padding: 9px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: inherit;
+    background: var(--panel);
+    color: var(--text);
+    resize: none;
+    overflow: hidden;
+    min-height: 38px;
+    line-height: 1.4;
+  }
+  .bullet-row textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  .add-btn:hover { background: var(--readout-bg); }
+  .radio-group {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 4px;
+  }
+  .radio-option {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: none;
+    letter-spacing: normal;
+    color: var(--text);
+    cursor: pointer;
+  }
+  .radio-option input {
+    accent-color: var(--accent);
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+  }
+  .out-panel {
+    grid-column: 1 / -1;
+  }
+  .out-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .out-row h2 {
+    font-size: 15px;
+    margin: 0;
+  }
+  .copy-btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .copy-btn:hover { background: var(--accent-hover); }
+  .copy-btn.copied { background: #16a34a; }
+  .field-block {
+    margin-bottom: 12px;
+  }
+  .field-block label {
+    margin-bottom: 3px;
+  }
+  .readout {
+    background: var(--readout-bg);
+    border: 1px solid var(--border);
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 13.5px;
+    font-family: "SF Mono", Consolas, Menlo, monospace;
+    color: var(--text);
+  }
+  textarea#emailOutput {
+    width: 100%;
+    min-height: 340px;
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.6;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    resize: vertical;
+    color: var(--text);
+    background: var(--readout-bg);
+  }
+  textarea#emailOutput:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  .theme-toggle {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 7px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .theme-toggle:hover { background: var(--readout-bg); }
+  .header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    grid-column: 1 / -1;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header-row">
+    <div>
+      <h1>CVU Revision Email Writer</h1>
+      <p class="sub">Fill in the applicant details and findings, then copy the subject and body.</p>
+    </div>
+    <button class="theme-toggle" id="themeToggle" type="button">🌙 Dark mode</button>
+  </div>
+
+  <div class="panel">
+    <label for="applicantName">Applicant Name</label>
+    <input type="text" id="applicantName" placeholder="e.g. John Michael Doe">
+
+    <label for="passportNumber">Passport Number</label>
+    <input type="text" id="passportNumber" placeholder="e.g. P1234567">
+
+    <label for="salutation">Salutation / Title (e.g. Mr., Ms., Dr.)</label>
+    <input type="text" id="salutation" placeholder="e.g. Mr.">
+
+    <label>Application Type</label>
+    <div class="radio-group">
+      <label class="radio-option"><input type="radio" name="appType" value="sport" checked> Sport</label>
+      <label class="radio-option"><input type="radio" name="appType" value="student"> Student</label>
+      <label class="radio-option"><input type="radio" name="appType" value="employment"> Employment</label>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="bullets-title">
+      <span>Findings (bullet points)</span>
+    </div>
+    <div id="bulletsContainer"></div>
+    <button class="add-btn" id="addBulletBtn" type="button">+ Add finding</button>
+  </div>
+
+  <div class="panel out-panel">
+    <div class="field-block">
+      <label>Subject Line</label>
+      <div class="readout" id="subjectReadout">Subject will appear here</div>
+    </div>
+    <div style="margin-bottom:14px; display:flex; justify-content:flex-end;">
+      <button class="copy-btn" id="copySubjectBtn" type="button">Copy Subject</button>
+    </div>
+    <div class="out-row">
+      <h2>Email Body</h2>
+      <button class="copy-btn" id="copyBodyBtn" type="button">Copy Body</button>
+    </div>
+    <textarea id="emailOutput" readonly></textarea>
+  </div>
+</div>
+
+<script>
+  const bulletsContainer = document.getElementById('bulletsContainer');
+  const addBulletBtn = document.getElementById('addBulletBtn');
+  const applicantName = document.getElementById('applicantName');
+  const passportNumber = document.getElementById('passportNumber');
+  const salutation = document.getElementById('salutation');
+  const subjectReadout = document.getElementById('subjectReadout');
+  const emailOutput = document.getElementById('emailOutput');
+  const copyBodyBtn = document.getElementById('copyBodyBtn');
+  const copySubjectBtn = document.getElementById('copySubjectBtn');
+  const appTypeRadios = document.querySelectorAll('input[name="appType"]');
+
+  const CHECKLIST_LINKS = {
+    sport: 'https://identita.gov.mt/wp-content/uploads/2025/07/12.-Sports-Trials-Checklist.pdf',
+    student: 'https://identita.gov.mt/wp-content/uploads/2025/08/03a.-List-of-Required-Documents-Student_National_Visa.pdf',
+    employment: 'https://identita.gov.mt/wp-content/uploads/2025/06/01.-List-of-Required-Documents-EMPLOYMENT-VISA.pdf'
+  };
+
+  function getAppType() {
+    return document.querySelector('input[name="appType"]:checked').value;
+  }
+
+  function updateAppTypeUI() {
+    bulletsContainer.innerHTML = '';
+    for (let i = 0; i < 4; i++) addBullet();
+    render();
+  }
+
+  appTypeRadios.forEach(r => r.addEventListener('change', updateAppTypeUI));
+
+  function autoResize(el) {
+    el.style.height = 'auto';
+    el.style.height = el.scrollHeight + 'px';
+  }
+
+  function createBulletRow(value = '') {
+    const row = document.createElement('div');
+    row.className = 'bullet-row';
+
+    const input = document.createElement('textarea');
+    input.rows = 1;
+    input.placeholder = 'Describe the issue found...';
+    input.value = value;
+    input.addEventListener('input', () => {
+      autoResize(input);
+      render();
+    });
+
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'icon-btn';
+    removeBtn.type = 'button';
+    removeBtn.innerHTML = '&times;';
+    removeBtn.title = 'Remove';
+    removeBtn.addEventListener('click', () => {
+      row.remove();
+      render();
+    });
+
+    row.appendChild(input);
+    row.appendChild(removeBtn);
+    requestAnimationFrame(() => autoResize(input));
+    return row;
+  }
+
+  function addBullet(value = '') {
+    bulletsContainer.appendChild(createBulletRow(value));
+  }
+
+  addBulletBtn.addEventListener('click', () => {
+    addBullet();
+    render();
+  });
+
+  // Start with 4 bullet rows to match the template
+  for (let i = 0; i < 4; i++) addBullet();
+
+  function getBulletValues() {
+    return Array.from(bulletsContainer.querySelectorAll('textarea'))
+      .map(i => i.value.trim())
+      .filter(v => v.length > 0);
+  }
+
+  function buildSubject() {
+    const name = applicantName.value.trim();
+    const passport = passportNumber.value.trim();
+    if (!name && !passport) return '';
+    let subj = 'Visa Application Revision Required';
+    if (name) subj += ` – ${name}`;
+    if (passport) subj += ` (Passport No. ${passport})`;
+    return subj;
+  }
+
+  function buildBody() {
+    const name = applicantName.value.trim();
+    const title = salutation.value.trim();
+    let greeting;
+    if (title && name) {
+      greeting = `${title} ${name}`;
+    } else if (name) {
+      greeting = name;
+    } else if (title) {
+      greeting = title;
+    } else {
+      greeting = 'XXXXXXXX';
+    }
+    const bullets = getBulletValues();
+    const bulletText = bullets.length
+      ? bullets.map(b => `* ${b}`).join('\n\n \n\n')
+      : '* XXXXXXXX \n\n \n\n* XXXXXXXX \n\n \n\n* XXXXXXXX \n\n \n\n* XXXXXXXX';
+
+    const link = CHECKLIST_LINKS[getAppType()];
+    const appType = getAppType();
+    const subjectReminder = appType === 'employment'
+      ? '\n\nAny correspondence should include name and passport number of applicant in the subject.'
+      : '';
+
+    return `Dear ${greeting},
+
+Whilst reviewing your application it was noted that:
+
+${bulletText}
+
+Kindly provide us with a revised document that meets CVU's checklist requirements as found on the following link ${link}
+
+Your feedback is required within five working days from the date of this email. Kindly note that no reminders will be sent and that no further revisions will be allowed.
+
+If you fail to provide the necessary requested information within this timeframe, your visa application outcome will be negatively impacted.${subjectReminder}
+
+Kind Regards,`;
+  }
+
+  function render() {
+    const subject = buildSubject();
+    subjectReadout.textContent = subject || 'Subject will appear here';
+    emailOutput.value = buildBody();
+  }
+
+  [applicantName, passportNumber, salutation].forEach(el => el.addEventListener('input', render));
+
+  function flashCopied(btn) {
+    const original = btn.textContent;
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = original;
+      btn.classList.remove('copied');
+    }, 1200);
+  }
+
+  copyBodyBtn.addEventListener('click', () => {
+    navigator.clipboard.writeText(emailOutput.value).then(() => flashCopied(copyBodyBtn));
+  });
+
+  copySubjectBtn.addEventListener('click', () => {
+    const subj = buildSubject();
+    if (!subj) return;
+    navigator.clipboard.writeText(subj).then(() => flashCopied(copySubjectBtn));
+  });
+
+  render();
+
+  // Theme toggle
+  const themeToggle = document.getElementById('themeToggle');
+  const rootEl = document.documentElement;
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+  function applyTheme(isDark) {
+    if (isDark) {
+      rootEl.setAttribute('data-theme', 'dark');
+      themeToggle.textContent = '☀️ Light mode';
+    } else {
+      rootEl.removeAttribute('data-theme');
+      themeToggle.textContent = '🌙 Dark mode';
+    }
+  }
+
+  let isDark = prefersDark;
+  applyTheme(isDark);
+
+  themeToggle.addEventListener('click', () => {
+    isDark = !isDark;
+    applyTheme(isDark);
+  });
+</script>
+</body>
+</html>
