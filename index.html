@@ -6,99 +6,157 @@
 <title>CVU Revision Email Writer</title>
 <style>
   :root {
-    --bg: #f4f5f7;
+    --bg: #eef1f6;
+    --bg-accent: #e4e9f4;
     --panel: #ffffff;
-    --border: #d9dce1;
-    --text: #1f2430;
+    --border: #dde1e9;
+    --border-soft: #e8eaf0;
+    --text: #1a1d29;
     --muted: #6b7280;
-    --accent: #1a56db;
-    --accent-hover: #164bc4;
+    --accent: #3357e0;
+    --accent-hover: #2846c2;
+    --accent-soft: #eaefff;
     --danger: #dc2626;
-    --readout-bg: #fafbfc;
+    --readout-bg: #f7f8fb;
+    --shadow: 0 1px 2px rgba(20, 24, 40, 0.04), 0 8px 24px -12px rgba(20, 24, 40, 0.10);
+    --shadow-sm: 0 1px 2px rgba(20, 24, 40, 0.06);
+    --ring: 0 0 0 3px rgba(51, 87, 224, 0.15);
   }
   [data-theme="dark"] {
-    --bg: #15171c;
-    --panel: #1e2128;
-    --border: #333844;
-    --text: #e6e8ec;
-    --muted: #9096a3;
-    --accent: #4d82f3;
-    --accent-hover: #3d6fe0;
+    --bg: #12141a;
+    --bg-accent: #171a22;
+    --panel: #1b1e27;
+    --border: #2d313d;
+    --border-soft: #262a34;
+    --text: #edeef2;
+    --muted: #8b91a1;
+    --accent: #6b8cf5;
+    --accent-hover: #85a0f7;
+    --accent-soft: #232a43;
     --danger: #f87171;
-    --readout-bg: #23262e;
+    --readout-bg: #20232c;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.2), 0 12px 28px -14px rgba(0, 0, 0, 0.55);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --ring: 0 0 0 3px rgba(107, 140, 245, 0.25);
   }
   * { box-sizing: border-box; }
   body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-    background: var(--bg);
+    background:
+      radial-gradient(1200px 480px at 12% -8%, var(--bg-accent), transparent),
+      var(--bg);
     color: var(--text);
-    padding: 24px;
+    padding: 32px 24px;
     transition: background 0.15s ease, color 0.15s ease;
+    -webkit-font-smoothing: antialiased;
   }
   .wrap {
-    max-width: 900px;
+    max-width: 920px;
     margin: 0 auto;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    gap: 18px;
   }
   @media (max-width: 800px) {
     .wrap { grid-template-columns: 1fr; }
   }
   h1 {
-    font-size: 20px;
+    font-size: 21px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
     margin: 0 0 4px;
     grid-column: 1 / -1;
   }
   .sub {
-    font-size: 13px;
+    font-size: 13.5px;
     color: var(--muted);
-    margin: 0 0 8px;
+    margin: 0 0 4px;
     grid-column: 1 / -1;
   }
   .panel {
     background: var(--panel);
     border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 18px;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: var(--shadow);
   }
   label {
     display: block;
-    font-size: 12.5px;
+    font-size: 12px;
     font-weight: 600;
     color: var(--muted);
-    margin-bottom: 4px;
+    margin-bottom: 6px;
     text-transform: uppercase;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.04em;
   }
   input[type="text"] {
     width: 100%;
-    padding: 9px 10px;
+    padding: 10px 12px;
     border: 1px solid var(--border);
-    border-radius: 6px;
+    border-radius: 8px;
     font-size: 14px;
-    margin-bottom: 14px;
+    margin-bottom: 16px;
     font-family: inherit;
-    background: var(--panel);
+    background: var(--readout-bg);
     color: var(--text);
+    transition: border-color 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
   }
   input[type="text"]:focus {
     outline: none;
     border-color: var(--accent);
+    box-shadow: var(--ring);
+    background: var(--panel);
+  }
+  .select-wrap {
+    position: relative;
+    margin-bottom: 4px;
+  }
+  select#appType {
+    width: 100%;
+    appearance: none;
+    -webkit-appearance: none;
+    padding: 10px 38px 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: inherit;
+    background: var(--readout-bg);
+    color: var(--text);
+    cursor: pointer;
+    transition: border-color 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+  }
+  select#appType:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: var(--ring);
+    background: var(--panel);
+  }
+  .select-wrap::after {
+    content: '';
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid var(--muted);
+    border-bottom: 2px solid var(--muted);
+    transform: translateY(-70%) rotate(45deg);
+    pointer-events: none;
   }
   .bullets-title {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
   }
   .bullets-title span {
-    font-size: 12.5px;
+    font-size: 12px;
     font-weight: 600;
     color: var(--muted);
     text-transform: uppercase;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.04em;
   }
   .bullet-row {
     display: flex;
@@ -110,73 +168,56 @@
     margin-bottom: 0;
   }
   .icon-btn {
-    background: none;
+    background: var(--panel);
     border: 1px solid var(--border);
-    border-radius: 6px;
-    width: 34px;
-    min-width: 34px;
+    border-radius: 8px;
+    width: 36px;
+    min-width: 36px;
+    height: 38px;
     cursor: pointer;
-    font-size: 15px;
+    font-size: 16px;
     color: var(--muted);
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
   }
-  .icon-btn:hover { background: var(--readout-bg); color: var(--danger); }
-  .icon-btn { background: var(--panel); color: var(--muted); }
+  .icon-btn:hover { background: var(--readout-bg); color: var(--danger); border-color: var(--danger); }
   .add-btn {
     width: 100%;
-    padding: 8px;
+    padding: 9px;
     border: 1px dashed var(--border);
-    border-radius: 6px;
+    border-radius: 8px;
     background: none;
     color: var(--accent);
     cursor: pointer;
     font-size: 13.5px;
-    font-weight: 500;
+    font-weight: 600;
     margin-top: 2px;
+    transition: background 0.12s ease, border-color 0.12s ease;
   }
   .bullet-row textarea {
     width: 100%;
-    padding: 9px 10px;
+    padding: 10px 12px;
     border: 1px solid var(--border);
-    border-radius: 6px;
+    border-radius: 8px;
     font-size: 14px;
     font-family: inherit;
-    background: var(--panel);
+    background: var(--readout-bg);
     color: var(--text);
     resize: none;
     overflow: hidden;
-    min-height: 38px;
+    min-height: 40px;
     line-height: 1.4;
+    transition: border-color 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
   }
   .bullet-row textarea:focus {
     outline: none;
     border-color: var(--accent);
+    box-shadow: var(--ring);
+    background: var(--panel);
   }
-  .add-btn:hover { background: var(--readout-bg); }
-  .radio-group {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 4px;
-  }
-  .radio-option {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 14px;
-    font-weight: 500;
-    text-transform: none;
-    letter-spacing: normal;
-    color: var(--text);
-    cursor: pointer;
-  }
-  .radio-option input {
-    accent-color: var(--accent);
-    width: 16px;
-    height: 16px;
-    cursor: pointer;
-  }
+  .add-btn:hover { background: var(--accent-soft); border-color: var(--accent); }
   .out-panel {
     grid-column: 1 / -1;
   }
@@ -187,32 +228,36 @@
     margin-bottom: 10px;
   }
   .out-row h2 {
-    font-size: 15px;
+    font-size: 14.5px;
+    font-weight: 700;
     margin: 0;
   }
   .copy-btn {
     background: var(--accent);
     color: white;
     border: none;
-    padding: 8px 16px;
-    border-radius: 6px;
+    padding: 9px 18px;
+    border-radius: 8px;
     font-size: 13.5px;
     font-weight: 600;
     cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: background 0.12s ease, transform 0.06s ease;
   }
   .copy-btn:hover { background: var(--accent-hover); }
+  .copy-btn:active { transform: translateY(1px); }
   .copy-btn.copied { background: #16a34a; }
   .field-block {
-    margin-bottom: 12px;
+    margin-bottom: 14px;
   }
   .field-block label {
-    margin-bottom: 3px;
+    margin-bottom: 4px;
   }
   .readout {
     background: var(--readout-bg);
     border: 1px solid var(--border);
-    padding: 8px 10px;
-    border-radius: 6px;
+    padding: 10px 12px;
+    border-radius: 8px;
     font-size: 13.5px;
     font-family: "SF Mono", Consolas, Menlo, monospace;
     color: var(--text);
@@ -222,30 +267,34 @@
     min-height: 340px;
     padding: 16px;
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 14px;
     line-height: 1.6;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
     resize: vertical;
     color: var(--text);
     background: var(--readout-bg);
+    transition: border-color 0.12s ease, box-shadow 0.12s ease;
   }
   textarea#emailOutput:focus {
     outline: none;
     border-color: var(--accent);
+    box-shadow: var(--ring);
   }
   .theme-toggle {
     background: var(--panel);
     border: 1px solid var(--border);
     color: var(--text);
-    padding: 7px 12px;
-    border-radius: 6px;
+    padding: 8px 14px;
+    border-radius: 8px;
     font-size: 13px;
     font-weight: 500;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 6px;
+    box-shadow: var(--shadow-sm);
+    transition: background 0.12s ease;
   }
   .theme-toggle:hover { background: var(--readout-bg); }
   .header-row {
@@ -253,6 +302,7 @@
     justify-content: space-between;
     align-items: flex-start;
     grid-column: 1 / -1;
+    margin-bottom: 6px;
   }
 </style>
 </head>
@@ -276,14 +326,9 @@
     <label for="salutation">Salutation / Title (e.g. Mr., Ms., Dr.)</label>
     <input type="text" id="salutation" placeholder="e.g. Mr.">
 
-    <label>Application Type</label>
-    <div class="radio-group">
-      <label class="radio-option"><input type="radio" name="appType" value="sport" checked> Sport</label>
-      <label class="radio-option"><input type="radio" name="appType" value="student"> Student</label>
-      <label class="radio-option"><input type="radio" name="appType" value="employment"> Employment</label>
-      <label class="radio-option"><input type="radio" name="appType" value="citizenship"> Citizenship</label>
-      <label class="radio-option"><input type="radio" name="appType" value="tempEmployment"> Temporary Employment</label>
-      <label class="radio-option"><input type="radio" name="appType" value="longTermNonTourism"> Long Term Non-Tourism</label>
+    <label for="appType">Application Type</label>
+    <div class="select-wrap">
+      <select id="appType"></select>
     </div>
   </div>
 
@@ -321,28 +366,32 @@
   const emailOutput = document.getElementById('emailOutput');
   const copyBodyBtn = document.getElementById('copyBodyBtn');
   const copySubjectBtn = document.getElementById('copySubjectBtn');
-  const appTypeRadios = document.querySelectorAll('input[name="appType"]');
+  const appTypeSelect = document.getElementById('appType');
 
-  const CHECKLIST_LINKS = {
-    sport: 'https://identita.gov.mt/wp-content/uploads/2025/07/12.-Sports-Trials-Checklist.pdf',
-    student: 'https://identita.gov.mt/wp-content/uploads/2025/08/03a.-List-of-Required-Documents-Student_National_Visa.pdf',
-    employment: 'https://identita.gov.mt/wp-content/uploads/2025/06/01.-List-of-Required-Documents-EMPLOYMENT-VISA.pdf',
-    citizenship: 'https://identita.gov.mt/wp-content/uploads/2024/12/Documentation-required-for-citizenship-residence-programmes.pdf',
-    tempEmployment: 'https://identita.gov.mt/wp-content/uploads/2024/12/Documentation-required-for-Temporary-Employment-in-Malta.pdf',
-    longTermNonTourism: 'https://identita.gov.mt/wp-content/uploads/2024/12/Documentation-required-for-long-term_non-tourism.pdf'
-  };
+  const APP_TYPES = [
+    { value: 'sport', label: 'Sport', link: 'https://identita.gov.mt/wp-content/uploads/2025/07/12.-Sports-Trials-Checklist.pdf' },
+    { value: 'student', label: 'Student', link: 'https://identita.gov.mt/wp-content/uploads/2025/08/03a.-List-of-Required-Documents-Student_National_Visa.pdf' },
+    { value: 'employment', label: 'Employment', link: 'https://identita.gov.mt/wp-content/uploads/2025/06/01.-List-of-Required-Documents-EMPLOYMENT-VISA.pdf' },
+    { value: 'citizenship', label: 'Citizenship', link: 'https://identita.gov.mt/wp-content/uploads/2024/12/Documentation-required-for-citizenship-residence-programmes.pdf' },
+    { value: 'tempEmployment', label: 'Temporary Employment', link: 'https://identita.gov.mt/wp-content/uploads/2024/12/Documentation-required-for-Temporary-Employment-in-Malta.pdf' },
+    { value: 'longTermNonTourism', label: 'Long Term Non-Tourism', link: 'https://identita.gov.mt/wp-content/uploads/2024/12/Documentation-required-for-long-term_non-tourism.pdf' }
+  ];
+
+  const CHECKLIST_LINKS = Object.fromEntries(APP_TYPES.map(t => [t.value, t.link]));
+
+  APP_TYPES.forEach(t => {
+    const opt = document.createElement('option');
+    opt.value = t.value;
+    opt.textContent = t.label;
+    appTypeSelect.appendChild(opt);
+  });
 
   function getAppType() {
-    return document.querySelector('input[name="appType"]:checked').value;
+    return appTypeSelect.value;
   }
 
-  function updateAppTypeUI() {
-    bulletsContainer.innerHTML = '';
-    for (let i = 0; i < 4; i++) addBullet();
-    render();
-  }
-
-  appTypeRadios.forEach(r => r.addEventListener('change', updateAppTypeUI));
+  // Findings are intentionally left untouched when the application type changes.
+  appTypeSelect.addEventListener('change', render);
 
   function autoResize(el) {
     el.style.height = 'auto';
